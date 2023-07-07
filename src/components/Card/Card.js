@@ -1,4 +1,4 @@
-function Card({ value, suit }) {
+const Card=({ value, suit })=> {
     return (
         <div className="card">
             <div className="value">{value}</div>

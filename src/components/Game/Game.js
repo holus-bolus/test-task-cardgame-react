@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
-import Player from "./Player";
-import Dealer from "./Dealer";
+import {useState, useEffect} from 'react';
+import Player from "../Player/Player";
+import Dealer from "../Dealer/Dealer";
+import "./Game.css";
+
 
 function Game() {
     const [deck, setDeck] = useState([]);
@@ -15,6 +17,15 @@ function Game() {
         setDeck(createDeck());
     }, []);
 
+    function restartGame() {
+        setDeck(createDeck());
+        setPlayerHand([]);
+        setDealerHand([]);
+        setTurn('player');
+        setGameOver(false);
+        setWinner(null);
+    }
+
     function createDeck() {
         const suits = ['♠', '♥', '♦', '♣'];
         const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
@@ -22,7 +33,7 @@ function Game() {
 
         for (let suit of suits) {
             for (let value of values) {
-                deck.push({ suit, value });
+                deck.push({suit, value});
             }
         }
 
@@ -127,13 +138,16 @@ function Game() {
     }
 
 
-
     return (
         <div className="game">
-            {!gameOver && <button onClick={startGame}>Start</button>}
-            {gameOver && <div>Game Over. Winner: {winner}</div>}
-            <Dealer hand={dealerHand} />
-            <Player hand={playerHand} hitMe={hitMe} stay={stay} />
+            <div className="game-container">
+                {!gameOver && <button onClick={startGame}>Start</button>}
+                {gameOver && <div>Game Over. Winner: {winner}</div>}
+                {gameOver && <button onClick={restartGame}>Restart</button>} {/* Add this line */}
+                <Dealer hand={dealerHand}/>
+                <Player hand={playerHand} hitMe={hitMe} stay={stay}
+                        gameOver={gameOver}/> {/* Pass down 'gameOver' prop */}
+            </div>
         </div>
     );
 }

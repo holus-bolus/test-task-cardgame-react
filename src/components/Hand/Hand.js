@@ -1,6 +1,6 @@
-import Card from "./Card";
+import Card from "../Card/Card";
 
-function Hand({ cards }) {
+const Hand=({ cards }) =>{
     return (
         <div className="hand">
             {cards.map((card, index) => (

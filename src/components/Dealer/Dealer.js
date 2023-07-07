@@ -1,6 +1,6 @@
-import Hand from "./Hand";
+import Hand from "../Hand/Hand";
 
-function Dealer({ hand }) {
+const Dealer=({ hand }) =>{
     return (
         <div className="dealer">
             <h2>Dealer</h2>
