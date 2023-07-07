@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useState, useEffect } from 'react';
 import Player from "./Player";
 import Dealer from "./Dealer";
 
@@ -70,23 +70,40 @@ function Game() {
 
         return sum;
     }
+
+    // Player actions
     function hitMe() {
-        setPlayerHand([...playerHand, drawCard()]);
-        const handValue = calculateHand([...playerHand, drawCard()]);
-        if (handValue > 21) {
+        if (turn !== 'player') return;  // It must be the player's turn to hit
+
+        // Draw a new card
+        const card = drawCard();
+
+        if (!card) {
+            console.error('No more cards in the deck.');
+            return;
+        }
+
+        // Add the new card to the player's hand
+        setPlayerHand(prevHand => [...prevHand, card]);
+
+        // If the player's hand value exceeds 21, end the game and declare the dealer the winner
+        if (calculateHand(playerHand) > 21) {
             setGameOver(true);
             setWinner('dealer');
         }
     }
 
+
     function stay() {
-        setTurn('dealer');
-        dealerPlay();
+        if (!gameOver) {
+            setTurn('dealer');
+            dealerPlay();
+        }
     }
 
     // Dealer's logic
     function dealerPlay() {
-        while (calculateHand(dealerHand) <= 16) {
+        while (calculateHand(dealerHand) <= 16 && !gameOver) {
             setDealerHand([...dealerHand, drawCard()]);
         }
         if (calculateHand(dealerHand) > 21) {
@@ -109,6 +126,8 @@ function Game() {
         }
     }
 
+
+
     return (
         <div className="game">
             {!gameOver && <button onClick={startGame}>Start</button>}
@@ -118,5 +137,6 @@ function Game() {
         </div>
     );
 }
+
 
 export default Game;
