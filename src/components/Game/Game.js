@@ -17,6 +17,15 @@ function Game() {
         setDeck(createDeck());
     }, []);
 
+    const [balance, setBalance] = useState(100); // Initialize user balance
+    const [bet, setBet] = useState(10); // Initialize current bet
+
+    useEffect(() => {
+        if (balance < 0) {
+            setBalance(10 * bet);
+        }
+    }, [balance, bet]);
+
     function restartGame() {
         setDeck(createDeck());
         setPlayerHand([]);
@@ -47,11 +56,31 @@ function Game() {
     }
 
     function startGame() {
+        // Check if user has enough balance to place the bet
+        if (balance < bet) {
+            alert('Insufficient balance!');
+            return;
+        }
+        // Deduct bet from balance
+        setBalance(prevBalance => prevBalance - bet);
         // Draw two cards for the player and one for the dealer
         setPlayerHand([drawCard(), drawCard()]);
         setDealerHand([drawCard()]);
-    }
 
+    }
+    useEffect(() => {
+        if (gameOver) {
+            if (winner === 'player') {
+                // If the player won, they get double their bet
+                setBalance(prevBalance => prevBalance + bet * 2);
+            } else if (winner === 'dealer') {
+                // If the dealer won, the player gets nothing (bet is lost)
+            } else if (winner === 'tie') {
+                // If it's a tie, the player gets their bet back
+                setBalance(prevBalance => prevBalance + bet);
+            }
+        }
+    }, [gameOver, winner, bet]);
     function drawCard() {
         const newDeck = [...deck];
         const drawnCard = newDeck.pop();
@@ -141,6 +170,9 @@ function Game() {
     return (
         <div className="game">
             <div className="game-container">
+                {/* Show current balance and allow user to set bet */}
+                <p>Balance: ${balance}</p>
+                <input type="number" value={bet} onChange={e => setBet(Number(e.target.value))} />
                 {!gameOver && <button onClick={startGame}>Start</button>}
                 {gameOver && <div>Game Over. Winner: {winner}</div>}
                 {gameOver && <button onClick={restartGame}>Restart</button>} {/* Add this line */}
