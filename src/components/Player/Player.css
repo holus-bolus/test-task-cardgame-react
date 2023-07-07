@@ -1,0 +1,14 @@
+h1 {
+    text-align: center;
+}
+
+.cards-flex {
+    display: flex;
+    gap: 30px;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
